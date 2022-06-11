@@ -21,7 +21,8 @@ st.image(image_cover,use_column_width= True)
 st.write("""
 # Tooth decay identification Web App
 
-***Skin cancer*** is abc
+***Tooth decay identification*** is a final thesis project of Khong Minh Duc from IU-VNU advised by Dr. Le Duy Tan.
+This project will help to shorcut diganosis timing of dentists in decay-era
 
 ***Classes***: 
 ```python
@@ -56,10 +57,11 @@ else:
 	img = Image.open(selected_image)
 	img = np.array(img.convert("RGB"))
 	st.image(img)
-	model_url = 'https://github.com/dinhsang1999/toothdecay-streamlit/releases/download/vgg16-224/best_model.h5'
+	model_url = 'https://github.com/kmduc1012/Thesis-project-final_Khong-Minh-Duc/releases/download/best_model_VGG16_input224/best_model.h5'
 	urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.h5"))
 
 	classes = ['carry','no-carry']
+	#FIXME belong to best_model.h5
 	base_model = tf.keras.applications.VGG16(include_top=False, input_shape=(224, 224, 3), weights=None,classes=2)
 
 	model = Sequential()
@@ -82,9 +84,9 @@ else:
 	st.write(class_name)
 	#Recomendation
 	if class_name == 'carry':
-		st.write('Recomendation:?')
+		st.write('Recomendation:Using P/S S100 Pro with whitening P/S Toothpaste will help you improve their oral health.')
 	else:
-		st.write('Recomendation:?')
+		st.write('Recomendation: Your oral health is good. However, you should to use P/S S100 Pro Electric toothbrush to maintain it.')
 
 
 
