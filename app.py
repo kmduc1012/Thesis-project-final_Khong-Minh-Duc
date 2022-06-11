@@ -21,7 +21,7 @@ st.image(image_cover,use_column_width= True)
 st.write("""
 # Tooth decay identification Web App
 
-***Skin cancer*** is
+***Skin cancer*** is abc
 
 ***Classes***: 
 ```python
