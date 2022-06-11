@@ -57,12 +57,12 @@ else:
 	img = Image.open(selected_image)
 	img = np.array(img.convert("RGB"))
 	st.image(img)
-	model_url = 'https://github.com/kmduc1012/Thesis-project-final_Khong-Minh-Duc/releases/download/best_model_VGG16_input224/best_model.h5'
+	model_url = 'https://github.com/kmduc1012/Thesis-project-final_Khong-Minh-Duc/releases/download/best_model_Xception/best_model.1.h5'
 	urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.h5"))
 
 	classes = ['carry','no-carry']
 	#FIXME belong to best_model.h5
-	base_model = tf.keras.applications.VGG16(include_top=False, input_shape=(224, 224, 3), weights=None,classes=2)
+	base_model = tf.keras.applications.Xception(include_top=False, input_shape=(224, 224, 3), weights=None,classes=2)
 
 	model = Sequential()
 	model.add(base_model)
