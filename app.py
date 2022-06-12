@@ -62,7 +62,7 @@ else:
 
 	classes = ['carry','no-carry']
 	#FIXME belong to best_model.h5
-	base_model = tf.keras.applications.Xception(include_top=False, input_shape=(224, 224, 3), weights=None,classes=2)
+	base_model = tf.keras.applications.VGG16(include_top=False, input_shape=(224, 224, 3), weights=None,classes=2)
 
 	model = Sequential()
 	model.add(base_model)
