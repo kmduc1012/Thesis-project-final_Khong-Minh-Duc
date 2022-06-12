@@ -84,7 +84,7 @@ else:
 	st.write(class_name)
 	#Recomendation
 	if class_name == 'carry':
-		st.write('Recomendation:Using P/S S100 Pro with whitening P/S Toothpaste will help you improve their oral health.')
+		st.write('Recomendation: Using P/S S100 Pro with whitening P/S Toothpaste will help you improve their oral health.')
 	else:
 		st.write('Recomendation: Your oral health is good. However, you should to use P/S S100 Pro Electric toothbrush to maintain it.')
 
