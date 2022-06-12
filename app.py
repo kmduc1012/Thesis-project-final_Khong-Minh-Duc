@@ -58,7 +58,7 @@ else:
 	img = np.array(img.convert("RGB"))
 	st.image(img)
 	model_url = 'https://github.com/kmduc1012/Thesis-project-final_Khong-Minh-Duc/releases/download/best_model_Xception/best_model.1.h5'
-	urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.h5"))
+	urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.1.h5"))
 
 	classes = ['carry','no-carry']
 	#FIXME belong to best_model.h5
