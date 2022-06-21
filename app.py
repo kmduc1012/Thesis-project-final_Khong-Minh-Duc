@@ -15,6 +15,8 @@ from PIL import Image
 st.sidebar.header('User Input Features')
 selected_image = st.sidebar.file_uploader('Upload image from PC',type=['png', 'jpg'],help='Type of image should be PNG or JPEG')
 
+selected_sample = st.sidebar.selectbox('Sample',('Select sample','Sample 1','Sample 2','Sample 3','Sample 4'),help="Sample 1: ... - Sample 2: ...")
+
 image_cover = Image.open('./logo-ps.png')
 st.image(image_cover,use_column_width= True)
 
@@ -46,24 +48,18 @@ lottie_giveimage_sidebar = load_lottieurl('https://assets4.lottiefiles.com/packa
 lottie_giveimage_url = "https://assets2.lottiefiles.com/packages/lf20_9p4kck7t.json"
 lottie_giveimage = load_lottieurl(lottie_giveimage_url)
 
-os.makedirs('model',exist_ok = True)
+# os.makedirs('model',exist_ok = True)
+# if os.path.exists('model/best_model.h5'):
+# 	os.remove('model/best_model.h5')
 
-if not selected_image:
-	with st.sidebar:
-            	st_lottie(lottie_giveimage_sidebar, key = 'giveimage_sidebar',height=500)
-
-	st_lottie(lottie_giveimage,key = 'giveme',height=400)
-else:
-	img = Image.open(selected_image)
-	img = np.array(img.convert("RGB"))
-	st.image(img)
-	model_url = 'https://github.com/kmduc1012/Thesis-project-final_Khong-Minh-Duc/releases/download/best_model_VGG-16/best_model.h5'
-	urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.h5"))
-
-	classes = ['carry','no-carry']
-	#FIXME belong to best_model.h5
+@st.cache(allow_output_mutation=True)
+def load_model():
+	os.makedirs('model',exist_ok = True)
+	if not os.path.exists('model/best_model.h5'):
+		with st.spinner("Downloading model... this may take awhile! \n Don't stop it!"):
+			model_url = 'https://github.com/dinhsang1999/toothdecay-streamlit/releases/download/vgg16-224/best_model.h5'
+			urllib.request.urlretrieve(model_url, os.path.join("model", "best_model.h5"))
 	base_model = tf.keras.applications.VGG16(include_top=False, input_shape=(224, 224, 3), weights=None,classes=2)
-
 	model = Sequential()
 	model.add(base_model)
 	model.add(Flatten())
@@ -72,9 +68,49 @@ else:
 	model.add(Dense(256, activation="relu"))
 	model.add(Dropout(0.2))
 	model.add(Dense(2, activation="softmax"))
-
+	
 	model.load_weights('model/best_model.h5')
+	
+	return model
 
+def show_result(path):
+	img = Image.open(path)
+	img = np.array(img.convert("RGB"))
+	st.image(img)
+	
+	classes = ['carry','no-carry']
+	
+	model = load_model()
+	
+	img = cv2.resize(img, (224, 224))
+	result = model.predict(img.reshape(1, 224, 224, 3))
+	max_prob = max(result[0])
+	
+	class_ind = list(result[0]).index(max_prob)
+	class_name = classes[class_ind]
+
+	st.write(class_name)
+	#Recomendation
+	if class_name == 'carry':
+		st.write('Recomendation: Using P/S S100 Pro with whitening P/S Toothpaste will help you improve their oral health.')
+	else:
+		st.write('Recomendation: Your oral health is good. However, you should to use P/S S100 Pro Electric toothbrush to maintain it.')
+	
+	
+if (not selected_image) and (selected_sample == 'Select sample'):
+	with st.sidebar:
+            	st_lottie(lottie_giveimage_sidebar, key = 'giveimage_sidebar',height=500)
+
+	st_lottie(lottie_giveimage,key = 'giveme',height=400)
+elif selected_image:
+	img = Image.open(selected_image)
+	img = np.array(img.convert("RGB"))
+	st.image(img)
+
+	classes = ['carry','no-carry']
+	
+	model = load_model()
+		
 	img = cv2.resize(img, (224, 224))
 	result = model.predict(img.reshape(1, 224, 224, 3))
 	max_prob = max(result[0])	
@@ -87,6 +123,17 @@ else:
 		st.write('Recomendation: Using P/S S100 Pro with whitening P/S Toothpaste will help you improve their oral health.')
 	else:
 		st.write('Recomendation: Your oral health is good. However, you should to use P/S S100 Pro Electric toothbrush to maintain it.')
+else:
+	if selected_sample == 'Sample 1':
+		show_result('./sample/Caries_1.jpg')
+	if selected_sample == 'Sample 2':
+		show_result('./sample/Caries_2.jpg')
+	if selected_sample == 'Sample 3':
+		show_result('./sample/No-caries_1.jpg')
+	if selected_sample == 'Sample 4':
+		show_result('./sample/No-caries_2.jpg')
+		
+		
 
 
 
